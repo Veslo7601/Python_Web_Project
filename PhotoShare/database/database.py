@@ -1,18 +1,33 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from os import environ
+import contextlib
 
-DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/postgres"
-#DATABASE_URL = environ.get("DATABASE_URL")
+from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
 
-engine = create_engine(DATABASE_URL)
+from ..conf.config import settings
 
-SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
 
-def get_database():
-    """Create database"""
-    database = SessionLocal()
-    try:
-        yield database
-    finally:
-        database.close()
+class DatabaseSessionManager:
+    def __init__(self, url: str):
+        self._engine: AsyncEngine | None = create_async_engine(url)
+        self._session_maker: async_sessionmaker = async_sessionmaker(autoflush=False, autocommit=False,
+                                                                     bind=self._engine)
+
+    @contextlib.asynccontextmanager
+    async def session(self):
+        if self._session_maker is None:
+            raise Exception("Session is not initialized")
+        session = self._session_maker()
+        try:
+            yield session
+        except Exception as err:
+            print(err)
+            await session.rollback()
+        finally:
+            await session.close()
+
+
+sessionmanager = DatabaseSessionManager(settings.SQLALCHEMY_DATABASE_URL)
+
+
+async def get_database():
+    async with sessionmanager.session() as session:
+        yield session

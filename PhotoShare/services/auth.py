@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from PhotoShare.database.database import get_database as get_db
 from PhotoShare.repository import users as repository_users
@@ -84,7 +84,7 @@ class Auth:
             )
 
     async def get_current_user(
-        self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+        self, token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)
     ):
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -108,8 +108,8 @@ class Auth:
             user = await repository_users.get_user_by_email(email, db)
             if user is None:
                 raise credentials_exception
-            self.r.set(f"user:{email}", pickle.dumps(user))
-            self.r.expire(f"user:{email}", 900)
+            await self.r.set(f"user:{email}", pickle.dumps(user))
+            await self.r.expire(f"user:{email}", 900)
         else:
             user = pickle.loads(user)
         return user

@@ -1,10 +1,9 @@
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = (
-        "postgresql+psycopg2://user:password@localhost:5432/postgres"
-    )
+    SQLALCHEMY_DATABASE_URL: str = "postgresql+asyncpg://postgres:password@localhost:5432/postgres"
     secret_key: str = "secret"
     algorithm: str = "HS256"
     mail_username: str = "example@meta.ua"
@@ -16,9 +15,7 @@ class Settings(BaseSettings):
     redis_port: int = 6379
     redis_password: str = "password"
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = ConfigDict(extra='ignore', env_file='../../.env', env_file_encoding="utf-8")  # noqa
 
 
 settings = Settings()
