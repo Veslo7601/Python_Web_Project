@@ -20,8 +20,8 @@ class Images(Base):
     owner_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")
     )
-    tags: Mapped["Tags"] = relationship("Tags", backref="images", cascade="all, delete-orphan")
-    comments: Mapped["Comments"] = relationship("Comments", backref="images", cascade="all, delete-orphan")
+    tags: Mapped[list["Tags"]] = relationship("Tags", back_populates="images", cascade="all, delete-orphan")
+    comments: Mapped["Comments"] = relationship("Comments", back_populates="images", cascade="all, delete-orphan")
 
 
 class Tags(Base):
@@ -29,7 +29,7 @@ class Tags(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     tag: Mapped[str] = mapped_column(String(25), nullable=True, unique=True)
     images_id: Mapped[int] = mapped_column(ForeignKey("images.id"), nullable=True)
-    images: Mapped["Images"] = relationship("Images", backref="tags", lazy="joined")
+    images: Mapped["Images"] = relationship("Images", back_populates="tags", lazy="joined")
 
 
 class Comments(Base):
@@ -41,6 +41,8 @@ class Comments(Base):
     images_id: Mapped[int] = mapped_column(
         ForeignKey("images.id", ondelete="CASCADE", onupdate="CASCADE")
     )
+
+    images: Mapped["Images"] = relationship("Images", back_populates="comments")
 
 
 class Role(enum.Enum):
