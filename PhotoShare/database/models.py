@@ -2,38 +2,45 @@ import enum
 from datetime import date
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, Boolean, func, Enum
+from sqlalchemy import String, ForeignKey, Boolean, func, Enum
 from sqlalchemy.sql.sqltypes import DateTime
 
 
 Base = declarative_base()
 
 
+class Images(Base):
+    __tablename__ = "images"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(String(255))
+    images_url: Mapped[str] = mapped_column(String(255))
+    created_at: Mapped[date] = mapped_column("created_at", DateTime, default=func.now(), nullable=True)
+
+    owner_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")
+    )
+    tags: Mapped["Tags"] = relationship("Tags", backref="images", cascade="all, delete-orphan")
+    comments: Mapped["Comments"] = relationship("Comments", backref="images", cascade="all, delete-orphan")
+
+
 class Tags(Base):
     __tablename__ = "tags"
-    id = Column(Integer, primary_key=True)
-    tag = Column(String(32), nullable=True, unique=True)
-    images_id = Column(Integer, ForeignKey("images.id"))
-    images = relationship("Images", back_populates="tags")
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tag: Mapped[str] = mapped_column(String(25), nullable=True, unique=True)
+    images_id: Mapped[int] = mapped_column(ForeignKey("images.id"), nullable=True)
+    images: Mapped["Images"] = relationship("Images", backref="tags", lazy="joined")
 
 
 class Comments(Base):
     __tablename__ = "comments"
-    id = Column(Integer, primary_key=True)
-    comment = Column(String(512), nullable=True)
-    created_at = Column(Date, nullable=True)
-    updated_at = Column(Date, nullable=True)
-    images_id = Column(Integer, ForeignKey("images.id"))
-    images = relationship("Images", back_populates="comments")
-
-
-class Images(Base):
-    __tablename__ = "images"
-    id = Column(Integer, primary_key=True)
-    image = Column(String(255), nullable=True)
-    created_at = Column(Date, nullable=True)
-    tags = relationship("Tags", back_populates="images", cascade="all, delete-orphan")
-    comments = relationship("Comments", back_populates="images", cascade="all, delete-orphan")
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")
+    )
+    images_id: Mapped[int] = mapped_column(
+        ForeignKey("images.id", ondelete="CASCADE", onupdate="CASCADE")
+    )
 
 
 class Role(enum.Enum):
@@ -54,3 +61,4 @@ class User(Base):
     role: Mapped[Enum] = mapped_column("role", Enum(Role), default=Role.user, nullable=True)
     confirmed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
     avatar: Mapped[str] = mapped_column(String(255), nullable=True)
+    blocked: Mapped[bool] = mapped_column(default=False)
