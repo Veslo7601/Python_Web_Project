@@ -10,3 +10,4 @@ passlib[bcrypt]
 pydantic-settings==2.3.3
 fastapi-mail==1.4.1
 uvicorn
+greenlet
