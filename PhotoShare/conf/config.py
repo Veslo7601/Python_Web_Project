@@ -13,16 +13,11 @@ class Settings(BaseSettings):
     mail_server: str = "smtp.meta.ua"
     redis_host: str = "localhost"
     redis_port: int = 6379
-<<<<<<< HEAD
-    # redis_password: str = "password"
-=======
-    redis_password: str = "password"
     CLD_NAME: str = "diho9zuth"
     CLD_API_KEY: str = "833657613867498"
     CLD_API_SECRET: str = "xV67Lwc7AG_7JHqjyix77S5Hf8A"
->>>>>>> 0f3fa55 (crud for images, requirements, redis password)
 
-    model_config = ConfigDict(extra='ignore', env_file='.env', env_file_encoding="utf-8")  # noqa
+    model_config = ConfigDict(extra='ignore', env_file='../../env', env_file_encoding="utf-8")  # noqa
 
 
 settings = Settings()
