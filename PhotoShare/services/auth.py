@@ -1,4 +1,4 @@
-import aioredis
+# import aioredis
 import pickle
 import os
 from datetime import datetime, timedelta
@@ -11,18 +11,23 @@ from jose import JWTError, jwt
 from PhotoShare.database.database import get_database
 from PhotoShare.repository import users as repository_users
 from PhotoShare.conf.config import settings
-from dotenv import load_dotenv
+from PhotoShare.repository.users import get_user_by_email
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 
 class Auth:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    ALGORITHM = os.getenv('ALGORITHM')
+    
+    # SECRET_KEY = os.getenv('SECRET_KEY')
+    # ALGORITHM = os.getenv('ALGORITHM')
 
-    def __init__(self):
-        self.cache = aioredis.from_url(f"redis://{settings.redis_host}:{settings.redis_port}/0")
+    SECRET_KEY = settings.secret_key
+    ALGORITHM = settings.algorithm
+
+    # def __init__(self):
+    #     self.cache = aioredis.from_url(f"redis://{settings.redis_host}:{settings.redis_port}/0")
 
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
@@ -30,7 +35,8 @@ class Auth:
     def get_password_hash(self, password: str):
         return self.pwd_context.hash(password)
 
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+    #oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
     async def create_access_token(self, data: dict, expires_delta: Optional[float] = None):
         to_encode = data.copy()
@@ -86,19 +92,24 @@ class Auth:
         except JWTError as err:
             print(f"Ошибка {err}")
             raise credentials_exception
-
-        user_cache = str(email)
-        print(user_cache)
-        user = await self.cache.get(user_cache)
+        
+        user = get_user_by_email(email, db)
         if user is None:
-            user = await repository_users.get_user_by_email(email, db)
-            if user is None:
-                raise credentials_exception
-            await self.cache.set(user_cache, pickle.dumps(user))
-            await self.cache.expire(user_cache, 300)
-        else:
-            user = pickle.loads(user)
+            raise credentials_exception
         return user
+
+        # user_cache = str(email)
+        # print(user_cache)
+        # user = await self.cache.get(user_cache)
+        # if user is None:
+        #     user = await repository_users.get_user_by_email(email, db)
+        #     if user is None:
+        #         raise credentials_exception
+        #     await self.cache.set(user_cache, pickle.dumps(user))
+        #     await self.cache.expire(user_cache, 300)
+        # else:
+        #     user = pickle.loads(user)
+        # return user
 
     def create_email_token(self, data: dict):
         to_encode = data.copy()
