@@ -18,8 +18,19 @@ load_dotenv()
 
 class Auth:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+<<<<<<< HEAD
     SECRET_KEY = os.getenv('SECRET_KEY')
     ALGORITHM = os.getenv('ALGORITHM')
+=======
+    SECRET_KEY = settings.secret_key
+    ALGORITHM = settings.algorithm
+    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+    r = Redis(
+        host=settings.redis_host,
+        port=settings.redis_port,
+        db=0,
+    )
+>>>>>>> 0f3fa55 (crud for images, requirements, redis password)
 
     def __init__(self):
         self.cache = aioredis.from_url(f"redis://{settings.redis_host}:{settings.redis_port}/0")

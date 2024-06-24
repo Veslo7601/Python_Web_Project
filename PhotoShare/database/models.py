@@ -12,8 +12,8 @@ Base = declarative_base()
 class Images(Base):
     __tablename__ = "images"
     id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String(255))
-    description: Mapped[str] = mapped_column(String(255))
+    title: Mapped[str] = mapped_column(String(255), nullable=True)
+    description: Mapped[str] = mapped_column(String(255), nullable=True)
     images_url: Mapped[str] = mapped_column(String(255))
     created_at: Mapped[date] = mapped_column("created_at", DateTime, default=func.now(), nullable=True)
 
