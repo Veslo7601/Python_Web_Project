@@ -20,7 +20,7 @@ class UserResponseSchema(BaseModel):
     id: int
     username: str
     email: EmailStr
-    # avatar: str
+    avatar: str | None
     role: Role | None
 
     class Config:
