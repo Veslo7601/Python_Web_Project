@@ -13,9 +13,9 @@ class Settings(BaseSettings):
     mail_server: str = "smtp.meta.ua"
     redis_host: str = "localhost"
     redis_port: int = 6379
-    redis_password: str = "password"
+    # redis_password: str = "password"
 
-    model_config = ConfigDict(extra='ignore', env_file='../../.env', env_file_encoding="utf-8")  # noqa
+    model_config = ConfigDict(extra='ignore', env_file='.env', env_file_encoding="utf-8")  # noqa
 
 
 settings = Settings()
