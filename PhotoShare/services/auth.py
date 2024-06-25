@@ -35,8 +35,8 @@ class Auth:
     def get_password_hash(self, password: str):
         return self.pwd_context.hash(password)
 
-    #oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
+    # oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
     async def create_access_token(self, data: dict, expires_delta: Optional[float] = None):
         to_encode = data.copy()
@@ -93,7 +93,7 @@ class Auth:
             print(f"Ошибка {err}")
             raise credentials_exception
         
-        user = get_user_by_email(email, db)
+        user = await get_user_by_email(email, db)
         if user is None:
             raise credentials_exception
         return user
