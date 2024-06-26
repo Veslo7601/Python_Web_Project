@@ -28,16 +28,6 @@ access_to_route_all = RoleAccess([Role.admin])
 
 
 @router.get(
-    "/{username}",
-    response_model=UserResponseSchemaForAdmin,
-    dependencies=[Depends(access_to_route_all)],
-)
-async def get_user_info(username: str = Path(), db: AsyncSession = Depends(get_database)):
-    user_info = await repositories_user.get_user_by_username(username, db)
-    return user_info
-
-
-@router.get(
     "/me",
     response_model=UserResponseSchema
 )
@@ -73,3 +63,13 @@ async def get_avatar(
     )
     user = await repositories_user.update_avatar_url(user.email, res_url, db)
     return user
+
+
+@router.get(
+    "/{username}",
+    response_model=UserResponseSchemaForAdmin,
+    dependencies=[Depends(access_to_route_all)],
+)
+async def get_user_info(username: str = Path(), db: AsyncSession = Depends(get_database)):
+    user_info = await repositories_user.get_user_by_username(username, db)
+    return user_info
