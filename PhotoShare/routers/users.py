@@ -1,15 +1,17 @@
+from pathlib import Path
+
 import cloudinary
 import cloudinary.uploader
 import os
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, UploadFile, File
-from fastapi_limiter.depends import RateLimiter
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from PhotoShare.database.database import get_database
-from PhotoShare.schemas import UserResponseSchema
+from PhotoShare.schemas import UserResponseSchema, UserResponseSchemaForAdmin, UserUpdateSchema
 from PhotoShare.services.auth import auth_service
-from PhotoShare.database.models import User
+from PhotoShare.database.models import User, Role
 from PhotoShare.repository import users as repositories_user
+from PhotoShare.services.role import RoleAccess
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -22,21 +24,32 @@ cloudinary.config(
     secure=True,
 )
 
+access_to_route_all = RoleAccess([Role.admin])
+
 
 @router.get(
     "/me",
-    response_model=UserResponseSchema,
-    dependencies=[Depends(RateLimiter(times=4, seconds=30))],
+    response_model=UserResponseSchema
 )
 async def get_user(user: User = Depends(auth_service.get_current_user)):
-    print(user)
+    return user
+
+
+@router.put(
+    "/me",
+    response_model=UserResponseSchema
+)
+async def update_user_info(body: UserUpdateSchema, user: User = Depends(auth_service.get_current_user), db: AsyncSession = Depends(get_database)):
+    user = await repositories_user.update_user(body, db, user)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
     return user
 
 
 @router.patch(
     "/avatar",
-    response_model=UserResponseSchema,
-    dependencies=[Depends(RateLimiter(times=4, seconds=30))],
+    response_model=UserResponseSchema
 )
 async def get_avatar(
     file: UploadFile = File(),
@@ -50,3 +63,13 @@ async def get_avatar(
     )
     user = await repositories_user.update_avatar_url(user.email, res_url, db)
     return user
+
+
+@router.get(
+    "/{username}",
+    response_model=UserResponseSchemaForAdmin,
+    dependencies=[Depends(access_to_route_all)],
+)
+async def get_user_info(username: str = Path(), db: AsyncSession = Depends(get_database)):
+    user_info = await repositories_user.get_user_by_username(username, db)
+    return user_info

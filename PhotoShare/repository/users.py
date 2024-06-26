@@ -5,7 +5,14 @@ from typing import Optional
 
 from PhotoShare.database.database import get_database
 from PhotoShare.database.models import User
-from PhotoShare.schemas import UserSchema
+from PhotoShare.schemas import UserSchema, UserUpdateSchema
+
+
+async def get_user_by_username(username: str, db: AsyncSession = Depends(get_database)):
+    stmt = select(User).filter_by(username=username)
+    user = await db.execute(stmt)
+    user = user.scalar_one_or_none()
+    return user
 
 
 async def get_user_by_email(email: str, db: AsyncSession = Depends(get_database)):
@@ -38,6 +45,18 @@ async def confirmed_email(email: str, db: AsyncSession) -> None:
 async def update_avatar_url(email: str, url: str | None, db: AsyncSession) -> User:
     user = await get_user_by_email(email, db)
     user.avatar = url
+    await db.commit()
+    await db.refresh(user)
+    return user
+
+
+async def update_user(body: UserUpdateSchema, db: AsyncSession, user: User):
+    stmt = select(User).filter_by(id=user.id)
+    result = await db.execute(stmt)
+    user = result.scalar_one_or_none()
+    for key, value in body.dict().items():
+        if value is not None:
+            setattr(user, key, value)
     await db.commit()
     await db.refresh(user)
     return user
