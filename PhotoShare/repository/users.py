@@ -8,6 +8,13 @@ from PhotoShare.database.models import User
 from PhotoShare.schemas import UserSchema
 
 
+async def get_user_by_username(username: str, db: AsyncSession = Depends(get_database)):
+    stmt = select(User).filter_by(username=username)
+    user = await db.execute(stmt)
+    user = user.scalar_one_or_none()
+    return user
+
+
 async def get_user_by_email(email: str, db: AsyncSession = Depends(get_database)):
     stmt = select(User).filter_by(email=email)
     user = await db.execute(stmt)

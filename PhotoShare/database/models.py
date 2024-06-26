@@ -54,7 +54,7 @@ class Role(enum.Enum):
 class User(Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(50))
+    username: Mapped[str] = mapped_column(String(50), unique=True)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(75), nullable=False, unique=True)
     refresh_token: Mapped[str] = mapped_column(String(255), nullable=True)
@@ -64,3 +64,4 @@ class User(Base):
     confirmed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
     avatar: Mapped[str] = mapped_column(String(255), nullable=True)
     blocked: Mapped[bool] = mapped_column(default=False)
+    image_count: Mapped[int] = mapped_column("image_count", default=0, nullable=True)

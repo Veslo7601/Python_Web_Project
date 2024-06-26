@@ -28,6 +28,19 @@ class UserResponseSchema(BaseModel):
         from_attributes = True
 
 
+class UserResponseSchemaForAdmin(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    avatar: str | None
+    role: Role | None
+    created_at: str
+    image_count: int
+
+    class Config:
+        from_attributes = True
+
+
 class RequestEmailSchema(BaseModel):
     email: EmailStr
 

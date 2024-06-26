@@ -94,7 +94,7 @@ async def remove_image(
         user: User = Depends(auth_service.get_current_user)
 
 ):
-    image = await delete_image(image_id, db, user.id)
+    image = await delete_image(image_id, db, user)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
     return image

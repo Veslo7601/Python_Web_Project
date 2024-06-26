@@ -8,6 +8,7 @@ from PhotoShare.schemas import ImageSchema
 async def add_image(body: ImageSchema, db: AsyncSession, user: User):
     image = Images(**body.dict(), owner_id=user.id)
     db.add(image)
+    user.image_count += 1
     await db.commit()
     await db.refresh(image)
     return image
@@ -36,11 +37,12 @@ async def update_image_description(image_id: int, description: str, db: AsyncSes
     return image
 
 
-async def delete_image(image_id: int, db: AsyncSession, user_id: int):
-    stmt = select(Images).filter_by(id=image_id, owner_id=user_id)
+async def delete_image(image_id: int, db: AsyncSession, user: User):
+    stmt = select(Images).filter_by(id=image_id, owner_id=user.id)
     image = await db.execute(stmt)
     image = image.scalar_one_or_none()
     if image:
         await db.delete(image)
+        user.image_count -= 1
         await db.commit()
     return image
