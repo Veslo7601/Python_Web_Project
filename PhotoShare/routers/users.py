@@ -41,7 +41,6 @@ async def get_user_info(username: str = Path()):
 @router.get(
     "/me",
     response_model=UserResponseSchema,
-    dependencies=[Depends(RateLimiter(times=4, seconds=30))],
 )
 async def get_user(user: User = Depends(auth_service.get_current_user)):
     return user
