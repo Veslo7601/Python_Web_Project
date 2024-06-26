@@ -86,7 +86,7 @@ async def edit_image_description(
 
 
 @router.delete(
-    "/{image_id}", response_model=ImageResponseSchema, status_code=status.HTTP_201_CREATED
+    "/{image_id}", status_code=status.HTTP_204_NO_CONTENT
 )
 async def remove_image(
         image_id: int = Path(ge=1),
