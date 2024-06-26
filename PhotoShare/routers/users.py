@@ -48,8 +48,7 @@ async def get_user(user: User = Depends(auth_service.get_current_user)):
 
 @router.patch(
     "/avatar",
-    response_model=UserResponseSchema,
-    dependencies=[Depends(RateLimiter(times=4, seconds=30))],
+    response_model=UserResponseSchema
 )
 async def get_avatar(
     file: UploadFile = File(),
