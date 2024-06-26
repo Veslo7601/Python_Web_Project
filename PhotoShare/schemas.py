@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel, Field, EmailStr
@@ -11,6 +12,11 @@ class UserSchema(BaseModel):
     password: str = Field(..., min_length=6, max_length=10)
 
 
+class UserUpdateSchema(BaseModel):
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
+
+
 class TokenSchema(BaseModel):
     access_token: str
     refresh_token: str
@@ -18,7 +24,6 @@ class TokenSchema(BaseModel):
 
 
 class UserResponseSchema(BaseModel):
-    id: int
     username: str
     email: EmailStr
     avatar: str | None
@@ -34,8 +39,8 @@ class UserResponseSchemaForAdmin(BaseModel):
     email: EmailStr
     avatar: str | None
     role: Role | None
-    created_at: str
-    image_count: int
+    created_at: datetime = Field(None, format="iso")
+    image_count: int | None
 
     class Config:
         from_attributes = True
