@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from PhotoShare.database.models import User, Images
 from PhotoShare.schemas import ImageSchema
 
+from PhotoShare.services.qrcode import generate_qr_code
 
 async def add_image(body: ImageSchema, db: AsyncSession, user: User):
     image = Images(**body.dict(), owner_id=user.id)
@@ -46,3 +47,17 @@ async def delete_image(image_id: int, db: AsyncSession, user: User):
         user.image_count -= 1
         await db.commit()
     return image
+
+
+
+async def update_image_qr_code(image_id: int, db: AsyncSession, user_id: int):
+    result = await db.execute(select(Images).filter_by(id=image_id, owner_id=user_id))
+    image = result.scalar_one_or_none()
+    if image is None:
+        return None
+
+    qr_code_url = await generate_qr_code(image.images_url)
+    image.qr_code_url = qr_code_url
+    await db.commit()
+    await db.refresh(image)
+    return qr_code_url

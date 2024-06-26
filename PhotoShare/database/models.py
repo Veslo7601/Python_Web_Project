@@ -15,6 +15,7 @@ class Images(Base):
     title: Mapped[str] = mapped_column(String(255))
     description: Mapped[str] = mapped_column(String(255))
     images_url: Mapped[str] = mapped_column(String(255))
+    qr_code_url: Mapped[str] = mapped_column(String(255), nullable=True)
     created_at: Mapped[date] = mapped_column("created_at", DateTime, default=func.now(), nullable=True)
 
     owner_id: Mapped[int] = mapped_column(
