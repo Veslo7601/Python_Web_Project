@@ -25,7 +25,7 @@ app = FastAPI()
 app.include_router(auth.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(images.router, prefix="/api")
-
+# app.include_router(tags.router, prefix="/api")
 # @app.on_event("startup")
 # async def startup():
 #     r = await redis.Redis(host=settings.redis_host, port=settings.redis_port, db=0)
@@ -53,5 +53,5 @@ async def healthchecker(db: AsyncSession = Depends(get_database)):
         raise HTTPException(status_code=500, detail="Error connecting to the database")
 
 
-# if __name__ == "__main__":
-#     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

@@ -61,3 +61,7 @@ async def update_user(body: UserUpdateSchema, db: AsyncSession, user: User):
     await db.refresh(user)
     return user
 
+
+async def block_user(user: User, db: AsyncSession = Depends(get_database)):
+    user.blocked = True
+    await db.commit()

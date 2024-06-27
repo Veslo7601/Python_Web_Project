@@ -12,15 +12,16 @@ from PhotoShare.services.auth import auth_service
 from PhotoShare.database.models import User, Role
 from PhotoShare.repository import users as repositories_user
 from PhotoShare.services.role import RoleAccess
+from PhotoShare.conf.config import settings
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 load_dotenv()
 
 cloudinary.config(
-    cloud_name=os.getenv('CLD_NAME'),
-    api_key=os.getenv('CLD_API_KEY'),
-    api_secret=os.getenv('CLD_API_SECRET'),
+    cloud_name=settings.CLD_NAME,
+    api_key=settings.CLD_API_KEY,
+    api_secret=settings.CLD_API_SECRET,
     secure=True,
 )
 
@@ -73,3 +74,12 @@ async def get_avatar(
 async def get_user_info(username: str = Path(), db: AsyncSession = Depends(get_database)):
     user_info = await repositories_user.get_user_by_username(username, db)
     return user_info
+
+@router.delete("/block/{username}",
+           dependencies=[Depends(access_to_route_all)])
+async def block_current_user(username: str, db: AsyncSession = Depends(get_database)):
+    user = await repositories_user.get_user_by_username(username, db)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    await repositories_user.block_user(user, db)
+    return {"message": "User successfully blocked"}
