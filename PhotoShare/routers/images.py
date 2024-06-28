@@ -126,7 +126,7 @@ async def transform_image(
         width: int = Query(default=250),
         height: int = Query(default=250),
         crop: str = Query(default="fill"),
-        filter: str = Query(default=None),
+        filter: str = Query(default="grayscale"),
         db: AsyncSession = Depends(get_database),
         user: User = Depends(auth_service.get_current_user)
 
