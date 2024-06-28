@@ -10,7 +10,7 @@ from PhotoShare.database.database import get_database
 from PhotoShare.database.models import User
 from PhotoShare.schemas import ImageSchema, ImageResponseSchema
 from PhotoShare.services.auth import auth_service
-from PhotoShare.services.images import extract_url_from_img_tag
+from PhotoShare.services.images import build_transform_url
 from PhotoShare.repository.images import add_image, get_all_images, get_image_by_url, update_image_description, delete_image, update_image_qr_code, update_image_url, get_image_by_id
 
 import qrcode
@@ -135,18 +135,7 @@ async def transform_image(
     if image is None:
         raise HTTPException(status_code=404, detail="Image not found")
 
-    public_id = f"users/{user.email}"
-
-    if not public_id:
-        raise HTTPException(status_code=400, detail="Public ID is required")
-
-    transformations = [
-        {"width": width, "height": height, "crop": crop},
-        {"effect": filter}
-    ]
-
-    tag_url = cloudinary.CloudinaryImage(public_id).image(transformation=transformations)
-    url = await extract_url_from_img_tag(tag_url)
+    url = await build_transform_url(user, width, height, crop, filter)
     image = await update_image_url(image_id, db, user, url)
 
     return image
