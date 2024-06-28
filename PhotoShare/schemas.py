@@ -73,3 +73,5 @@ class QRcodeResponseSchema(BaseModel):
     class Config:
         from_attributes = True
 
+class CommentsResponseSchema(BaseModel):
+    description: str | None

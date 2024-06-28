@@ -36,6 +36,11 @@ class Tags(Base):
 class Comments(Base):
     __tablename__ = "comments"
     id: Mapped[int] = mapped_column(primary_key=True)
+    description: Mapped[str] = mapped_column(String(255))
+
+    created_at: Mapped[date] = mapped_column("created_at", DateTime, default=func.now())
+    updated_at: Mapped[date] = mapped_column("updated_at", DateTime, default=func.now(), onupdate=func.now())
+    
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")
     )
