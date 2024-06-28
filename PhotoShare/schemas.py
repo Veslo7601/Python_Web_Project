@@ -64,3 +64,12 @@ class ImageResponseSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+class QRcodeResponseSchema(BaseModel):
+    id: int
+    images_url: str
+    qr_code_url: str
+
+    class Config:
+        from_attributes = True
+

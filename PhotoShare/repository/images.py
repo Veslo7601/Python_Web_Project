@@ -67,7 +67,7 @@ async def update_image_qr_code(image_id: int, db: AsyncSession, user_id: int):
     await db.commit()
     await db.refresh(image)
     return qr_code_url
-
+ 
 
 async def update_image_url(image_id: int, db: AsyncSession, user: User, transformed_url: str):
     result = await db.execute(select(Images).filter_by(id=image_id, owner_id=user.id))

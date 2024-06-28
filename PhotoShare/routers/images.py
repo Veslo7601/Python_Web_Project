@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from PhotoShare.conf.config import settings
 from PhotoShare.database.database import get_database
 from PhotoShare.database.models import User
-from PhotoShare.schemas import ImageSchema, ImageResponseSchema
+from PhotoShare.schemas import ImageSchema, ImageResponseSchema, QRcodeResponseSchema
 from PhotoShare.services.auth import auth_service
 from PhotoShare.services.images import build_transform_url
 from PhotoShare.repository.images import add_image, get_all_images, get_image_by_url, update_image_description, delete_image, update_image_qr_code, update_image_url, get_image_by_id
@@ -107,15 +107,16 @@ async def remove_image(
 
 
 @router.put(
-    "/{image_id}/generate_qr", response_model=str
+    "/{image_id}/generate_qr", response_model = QRcodeResponseSchema
 )
 async def generate_qr_for_image(
         image_id: int = Path(ge=1),
         db: AsyncSession = Depends(get_database), user: User = Depends(auth_service.get_current_user)
 ):
-    qr_code_url = await update_image_qr_code(image_id, db, user.id)
-    if qr_code_url is None:
+    image = await update_image_qr_code(image_id, db, user.id)
+    if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
+
 
     return qr_code_url
 
