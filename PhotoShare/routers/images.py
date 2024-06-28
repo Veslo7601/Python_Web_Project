@@ -10,7 +10,8 @@ from PhotoShare.database.database import get_database
 from PhotoShare.database.models import User
 from PhotoShare.schemas import ImageSchema, ImageResponseSchema, QRcodeResponseSchema
 from PhotoShare.services.auth import auth_service
-from PhotoShare.repository.images import add_image, get_all_images, get_image_by_url, update_image_description, delete_image, update_image_qr_code
+from PhotoShare.services.images import build_transform_url
+from PhotoShare.repository.images import add_image, get_all_images, get_image_by_url, update_image_description, delete_image, update_image_qr_code, update_image_url, get_image_by_id
 
 import qrcode
 import qrcode.image.svg
@@ -115,5 +116,28 @@ async def generate_qr_for_image(
     image = await update_image_qr_code(image_id, db, user.id)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
+
+
+    return qr_code_url
+
+
+@router.put("/{image_id}/transform", response_model=ImageResponseSchema)
+async def transform_image(
+        image_id: int = Path(ge=1),
+        width: int = Query(default=250),
+        height: int = Query(default=250),
+        crop: str = Query(default="fill"),
+        filter: str = Query(default="grayscale",
+                            description="Possible values: art:zorro, art:al_dente, art:hokusai, art:peacock, cartoonify"),
+        db: AsyncSession = Depends(get_database),
+        user: User = Depends(auth_service.get_current_user)
+
+):
+    image = await get_image_by_id(image_id, db, user.id)
+    if image is None:
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    url = await build_transform_url(user, width, height, crop, filter)
+    image = await update_image_url(image_id, db, user, url)
 
     return image
