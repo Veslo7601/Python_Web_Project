@@ -74,4 +74,12 @@ class QRcodeResponseSchema(BaseModel):
         from_attributes = True
 
 class CommentsResponseSchema(BaseModel):
-    description: str | None
+    id: int
+    description: str
+    created_at: datetime = Field(None, format="iso")
+    updated_at: datetime = Field(None, format="iso")
+    user_id: int
+    images_id: int
+
+    class Config:
+        from_attributes = True
