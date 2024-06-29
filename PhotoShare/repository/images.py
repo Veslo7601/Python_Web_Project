@@ -1,24 +1,78 @@
+import cloudinary
+from cloudinary.uploader import upload
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional, List
+from fastapi import UploadFile, File, HTTPException
+from datetime import datetime
 
-from PhotoShare.database.models import User, Images
+from PhotoShare.conf.config import settings
+from PhotoShare.database.models import User, Images, Tags
 from PhotoShare.schemas import ImageSchema
-
 from PhotoShare.services.qrcode import generate_qr_code
 
-async def add_image(body: ImageSchema, db: AsyncSession, user: User):
-    image = Images(**body.dict(), owner_id=user.id)
-    db.add(image)
-    user.image_count += 1
+
+cloudinary.config(
+    cloud_name=settings.CLD_NAME,
+    api_key=settings.CLD_API_KEY,
+    api_secret=settings.CLD_API_SECRET,
+    secure=True,
+)
+
+
+async def add_image(
+    title: Optional[str],
+    description: Optional[str],
+    tags: Optional[List[str]],
+    file: UploadFile,
+    user_id: int,
+    db: AsyncSession
+):
+    try:
+        upload_result = cloudinary.uploader.upload(file.file)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Не удалось загрузить изображение: {str(e)}")
+
+    url = upload_result.get('secure_url')
+    if not url:
+        raise HTTPException(status_code=500, detail="Загрузка изображения не удалась, URL не найден")
+
+    picture = Images(
+        title=title,
+        images_url=url,
+        description=description,
+        owner_id=user_id,
+        created_at=datetime.now()
+    )
+
+    if tags:
+        for tag_name in tags:
+            result = await db.execute(select(Tags).filter(Tags.tag == tag_name))
+            tag = result.scalar_one_or_none()
+            if not tag:
+                tag = Tags(tag=tag_name)
+                db.add(tag)
+                await db.commit()
+                await db.refresh(tag)
+            picture.tags.append(tag)
+
+    db.add(picture)
     await db.commit()
-    await db.refresh(image)
-    return image
+    await db.refresh(picture)
+
+    return picture
+
+
+async def get_image(images_id: int, db: AsyncSession):
+    result = await db.execute(select(Images).filter(Images.id == images_id))
+    picture = result.scalar_one_or_none()
+    return picture
 
 
 async def get_all_images(limit: int, offset: int, db: AsyncSession, user_id: int):
-    stmt = select(Images).filter_by(owner_id=user_id).offset(offset).limit(limit)
+    stmt = select(Images).filter(Images.owner_id == user_id).offset(offset).limit(limit)
     result = await db.execute(stmt)
-    images = result.scalars()
+    images = result.scalars().all()
     return images
 
 
@@ -47,7 +101,6 @@ async def delete_image(image_id: int, db: AsyncSession, user: User):
         user.image_count -= 1
         await db.commit()
     return image
-
 
 
 async def update_image_qr_code(image_id: int, db: AsyncSession, user_id: int):

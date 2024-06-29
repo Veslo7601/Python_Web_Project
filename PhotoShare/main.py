@@ -7,7 +7,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from PhotoShare.database.database import get_database
-from PhotoShare.routers import auth, users, images
+from PhotoShare.routers import auth, users, images, tags
 from PhotoShare.conf.config import settings
 
 app = FastAPI()
@@ -25,7 +25,7 @@ app = FastAPI()
 app.include_router(auth.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(images.router, prefix="/api")
-# app.include_router(tags.router, prefix="/api")
+app.include_router(tags.router, prefix="/api")
 # @app.on_event("startup")
 # async def startup():
 #     r = await redis.Redis(host=settings.redis_host, port=settings.redis_port, db=0)

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, Field, EmailStr
 
@@ -50,17 +50,32 @@ class RequestEmailSchema(BaseModel):
     email: EmailStr
 
 
+class TagSchemas(BaseModel):
+    tag: Optional[str] = None
+
+
+class TagResponseSchemas(TagSchemas):
+    id: Optional[int] = None
+
+
 class ImageSchema(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     images_url: Optional[str] = None
+    tags: Optional[List[str]] = None
+
+    class Config:
+        max_tags = 5
 
 
 class ImageResponseSchema(BaseModel):
     id: int
     images_url: str
-    title: str | None
-    description: str | None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    created_at: datetime
+    owner_id: int
+    # tags: List[TagResponseSchemas]
 
     class Config:
         from_attributes = True
