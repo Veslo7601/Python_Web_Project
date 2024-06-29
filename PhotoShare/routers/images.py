@@ -116,9 +116,7 @@ async def generate_qr_for_image(
     image = await update_image_qr_code(image_id, db, user.id)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
-
-
-    return qr_code_url
+    return image
 
 
 @router.put("/{image_id}/transform", response_model=ImageResponseSchema)
@@ -139,5 +137,4 @@ async def transform_image(
 
     url = await build_transform_url(user, width, height, crop, filter)
     image = await update_image_url(image_id, db, user, url)
-
     return image
