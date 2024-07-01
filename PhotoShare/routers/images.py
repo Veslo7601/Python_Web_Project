@@ -8,15 +8,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from PhotoShare.conf.config import settings
 from PhotoShare.database.database import get_database
 from PhotoShare.database.models import User
-from PhotoShare.schemas import ImageSchema, ImageResponseSchema, QRcodeResponseSchema
+from PhotoShare.schemas import ImageSchema, ImageResponseSchema, QRcodeResponseSchema, ImageResponseUpdateSchema
 from PhotoShare.services.auth import auth_service
 from PhotoShare.services.images import build_transform_url
 from PhotoShare.repository.images import add_image, get_all_images, get_image_by_url, update_image_description, delete_image, update_image_qr_code, update_image_url, get_image_by_id
-
-import qrcode
-import qrcode.image.svg
-from io import BytesIO
-from fastapi.responses import StreamingResponse, JSONResponse
 
 router = APIRouter(prefix="/image", tags=["images"])
 
@@ -35,6 +30,7 @@ async def post_image(
         title: str = Form(...),
         description: str = Form(...),
         file: UploadFile = File(),
+        tags: List[str] = Form([]),
         db: AsyncSession = Depends(get_database),
         user: User = Depends(auth_service.get_current_user)
 ):
@@ -46,7 +42,7 @@ async def post_image(
 
     body = ImageSchema(title=title, description=description, images_url=res_url)
 
-    image = await add_image(body, db, user)
+    image = await add_image(body, tags, db, user)
     return image
 
 
@@ -107,21 +103,28 @@ async def remove_image(
 
 
 @router.put(
-    "/{image_id}/generate_qr", response_model = QRcodeResponseSchema
+    "/{image_id}/generate_qr", response_model=QRcodeResponseSchema
 )
 async def generate_qr_for_image(
         image_id: int = Path(ge=1),
         db: AsyncSession = Depends(get_database), user: User = Depends(auth_service.get_current_user)
 ):
-    image = await update_image_qr_code(image_id, db, user.id)
-    if image is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
+    try:
+        qr_code_url = await update_image_qr_code(image_id, db, user.id)
+
+        if qr_code_url is None:
+            raise HTTPException(status_code=404, detail="Image not found")
+
+        return {
+            "id": image_id,
+            "qr_code_url": qr_code_url
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
-    return qr_code_url
-
-
-@router.put("/{image_id}/transform", response_model=ImageResponseSchema)
+@router.put("/{image_id}/transform", response_model=ImageResponseUpdateSchema)
 async def transform_image(
         image_id: int = Path(ge=1),
         width: int = Query(default=250),

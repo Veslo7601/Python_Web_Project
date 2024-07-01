@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List, Dict, Any, Type
 
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, validator
 
 from PhotoShare.database.models import Role
 
@@ -50,13 +50,33 @@ class RequestEmailSchema(BaseModel):
     email: EmailStr
 
 
+class TagSchemas(BaseModel):
+    tag: Optional[str] = None
+
+
+class TagResponseSchemas(TagSchemas):
+    id: Optional[int] = None
+
+
 class ImageSchema(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     images_url: Optional[str] = None
+    tags: Optional[List[TagSchemas]] = []
 
 
 class ImageResponseSchema(BaseModel):
+    id: int
+    images_url: str
+    title: str | None
+    description: str | None
+    tags: List[str] | None
+
+    class Config:
+        from_attributes = True
+
+
+class ImageResponseUpdateSchema(BaseModel):
     id: int
     images_url: str
     title: str | None
@@ -65,11 +85,10 @@ class ImageResponseSchema(BaseModel):
     class Config:
         from_attributes = True
 
+
 class QRcodeResponseSchema(BaseModel):
     id: int
-    images_url: str
     qr_code_url: str
 
     class Config:
         from_attributes = True
-

@@ -2,9 +2,8 @@ import enum
 from datetime import date
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import String, ForeignKey, Boolean, func, Enum
-from sqlalchemy.sql.sqltypes import DateTime
-
+from sqlalchemy import String, ForeignKey, Boolean, func, Enum, Table, Column
+from sqlalchemy.sql.sqltypes import DateTime, Integer
 
 Base = declarative_base()
 
@@ -21,7 +20,8 @@ class Images(Base):
     owner_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")
     )
-    tags: Mapped[list["Tags"]] = relationship("Tags", back_populates="images", cascade="all, delete-orphan")
+    # tags: Mapped[list["Tags"]] = relationship("Tags", back_populates="images", cascade="all, delete-orphan")
+    tags = relationship('Tags', secondary="image_tag", back_populates='images', lazy='joined')
     comments: Mapped["Comments"] = relationship("Comments", back_populates="images", cascade="all, delete-orphan")
 
 
@@ -29,8 +29,15 @@ class Tags(Base):
     __tablename__ = "tags"
     id: Mapped[int] = mapped_column(primary_key=True)
     tag: Mapped[str] = mapped_column(String(25), nullable=True, unique=True)
-    images_id: Mapped[int] = mapped_column(ForeignKey("images.id"), nullable=True)
-    images: Mapped["Images"] = relationship("Images", back_populates="tags", lazy="joined")
+    images = relationship('Images', secondary='image_tag', back_populates='tags')
+    # images_id: Mapped[int] = mapped_column(ForeignKey("images.id"), nullable=True)
+    # images: Mapped["Images"] = relationship("Images", back_populates="tags", lazy="joined")
+
+
+class ImageTagAssociation(Base):
+    __tablename__ = 'image_tag'
+    image_id = Column(Integer, ForeignKey('images.id'), primary_key=True)
+    tag_id = Column(Integer, ForeignKey('tags.id'), primary_key=True)
 
 
 class Comments(Base):
