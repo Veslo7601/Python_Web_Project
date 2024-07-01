@@ -75,19 +75,19 @@ class ImageResponseSchema(BaseModel):
     class Config:
         from_attributes = True
 
-    @staticmethod
-    def schema_extra(schema: Dict[str, Any], model: Type['ImageResponseSchema']) -> None:
-        for prop in schema.get('properties', {}).values():
-            prop.pop('title', None)
 
-    @staticmethod
-    def getter_dict(obj: Any) -> Dict[str, Any]:
-        return {k: v.tag if k == 'tags' and isinstance(v, list) else v for k, v in obj.__dict__.items()}
+class ImageResponseUpdateSchema(BaseModel):
+    id: int
+    images_url: str
+    title: str | None
+    description: str | None
+
+    class Config:
+        from_attributes = True
 
 
 class QRcodeResponseSchema(BaseModel):
     id: int
-    images_url: str
     qr_code_url: str
 
     class Config:
