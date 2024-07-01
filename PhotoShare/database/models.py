@@ -2,7 +2,7 @@ import enum
 from datetime import date
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import String, ForeignKey, Boolean, func, Enum, Table, Column
+from sqlalchemy import String, ForeignKey, Boolean, func, Enum, Table, Column, Text
 from sqlalchemy.sql.sqltypes import DateTime, Integer
 
 Base = declarative_base()
@@ -14,7 +14,7 @@ class Images(Base):
     title: Mapped[str] = mapped_column(String(255))
     description: Mapped[str] = mapped_column(String(255))
     images_url: Mapped[str] = mapped_column(String(255))
-    qr_code_url: Mapped[str] = mapped_column(String(255), nullable=True)
+    qr_code_url: Mapped[str] = mapped_column(Text, nullable=True)
     created_at: Mapped[date] = mapped_column("created_at", DateTime, default=func.now(), nullable=True)
 
     owner_id: Mapped[int] = mapped_column(

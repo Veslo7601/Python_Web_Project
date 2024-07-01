@@ -1,10 +1,13 @@
 # PhotoShare/services/qrcode_service.py
 
+import requests
+
 import qrcode
 import cloudinary
 import cloudinary.uploader
 from io import BytesIO
 from PhotoShare.conf.config import settings
+from urllib.parse import unquote
 
 # Настройка Cloudinary
 cloudinary.config(
@@ -28,7 +31,7 @@ async def generate_qr_code(image_url: str) -> str:
 
     # Сохранение QR кода в BytesIO (в оперативной памяти)
     img_bytes = BytesIO()
-    img.save(img_bytes, format='PNG')
+    img.save(img_bytes)
     img_bytes.seek(0)  # Перемотка BytesIO в начало, чтобы его можно было прочитать
 
     # Загрузка QR кода в Cloudinary и получение его URL
