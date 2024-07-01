@@ -20,7 +20,6 @@ class Images(Base):
     owner_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")
     )
-    # tags: Mapped[list["Tags"]] = relationship("Tags", back_populates="images", cascade="all, delete-orphan")
     tags = relationship('Tags', secondary="image_tag", back_populates='images', lazy='joined')
     comments: Mapped["Comments"] = relationship("Comments", back_populates="images", cascade="all, delete-orphan")
 
@@ -30,8 +29,6 @@ class Tags(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     tag: Mapped[str] = mapped_column(String(25), nullable=True, unique=True)
     images = relationship('Images', secondary='image_tag', back_populates='tags')
-    # images_id: Mapped[int] = mapped_column(ForeignKey("images.id"), nullable=True)
-    # images: Mapped["Images"] = relationship("Images", back_populates="tags", lazy="joined")
 
 
 class ImageTagAssociation(Base):
@@ -43,6 +40,11 @@ class ImageTagAssociation(Base):
 class Comments(Base):
     __tablename__ = "comments"
     id: Mapped[int] = mapped_column(primary_key=True)
+    description: Mapped[str] = mapped_column(String(255))
+
+    created_at: Mapped[date] = mapped_column("created_at", DateTime, default=func.now())
+    updated_at: Mapped[date] = mapped_column("updated_at", DateTime, default=func.now(), onupdate=func.now())
+    
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE")
     )

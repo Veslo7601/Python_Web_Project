@@ -28,8 +28,8 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 db_url = settings.SQLALCHEMY_DATABASE_URL
 print(f"Database URL: {db_url}")  # Debug print to verify the URL
-config.set_main_option("sqlalchemy.url", db_url)
-# config.set_main_option("sqlalchemy.url", settings.SQLALCHEMY_DATABASE_URL)
+# config.set_main_option("sqlalchemy.url", db_url)
+config.set_main_option("sqlalchemy.url", settings.SQLALCHEMY_DATABASE_URL)
 
 
 # other values from the config, defined by the needs of env.py,
