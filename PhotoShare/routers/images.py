@@ -13,11 +13,6 @@ from PhotoShare.services.auth import auth_service
 from PhotoShare.services.images import build_transform_url
 from PhotoShare.repository.images import add_image, get_all_images, get_image_by_url, update_image_description, delete_image, update_image_qr_code, update_image_url, get_image_by_id
 
-import qrcode
-import qrcode.image.svg
-from io import BytesIO
-from fastapi.responses import StreamingResponse, JSONResponse
-
 router = APIRouter(prefix="/image", tags=["images"])
 
 cloudinary.config(
@@ -35,6 +30,7 @@ async def post_image(
         title: str = Form(...),
         description: str = Form(...),
         file: UploadFile = File(),
+        tags: List[str] = Form([]),
         db: AsyncSession = Depends(get_database),
         user: User = Depends(auth_service.get_current_user)
 ):
@@ -46,7 +42,8 @@ async def post_image(
 
     body = ImageSchema(title=title, description=description, images_url=res_url)
 
-    image = await add_image(body, db, user)
+    image = await add_image(body, tags, db, user)
+    image.tags = [tag_object.tag for tag_object in image.tags]
     return image
 
 
