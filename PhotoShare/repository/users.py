@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
 from PhotoShare.database.database import get_database
-from PhotoShare.database.models import User
+from PhotoShare.database.models import User, Role
 from PhotoShare.schemas import UserSchema, UserUpdateSchema
 
 
@@ -25,9 +25,15 @@ async def get_user_by_email(email: str, db: AsyncSession = Depends(get_database)
 async def create_user(body: UserSchema, db: AsyncSession = Depends(get_database)):
     avatar: Optional[str] = None
     new_user = User(**body.model_dump(), avatar=avatar)
+    print(new_user)
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
+    if new_user.id == 1:
+        new_user.role = Role.admin
+        await db.commit()
+        await db.refresh(new_user)
+
     return new_user
 
 
