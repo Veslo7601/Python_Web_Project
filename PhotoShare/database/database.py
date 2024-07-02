@@ -29,5 +29,12 @@ sessionmanager = DatabaseSessionManager(settings.SQLALCHEMY_DATABASE_URL)
 
 
 async def get_database():
+    """
+    Get database session manager
+
+    Returns:
+        DatabaseSessionManager: Database session manager
+    """
+
     async with sessionmanager.session() as session:
         yield session
