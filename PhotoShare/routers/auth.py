@@ -38,6 +38,16 @@ async def signup(
     request: Request,
     db: AsyncSession = Depends(get_database),
 ):
+    """
+    Create new user and send email for confirmation
+
+    :param body: UserSchema
+    :param bt: BackgroundTasks
+    :param request: Request
+    :param db: AsyncSession
+    :return: UserSchema
+    """
+
     exist_user = await repositories_users.get_user_by_email(body.email, db)
     if exist_user:
         raise HTTPException(
@@ -53,6 +63,13 @@ async def signup(
 async def login(
     body: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_database)
 ):
+    """
+    Login user and generate JWT
+
+    :param body: OAuth2PasswordRequestForm
+    :param db: AsyncSession
+    :return: TokenSchema
+    """
     user = await repositories_users.get_user_by_email(body.username, db)
     if user is None:
         raise HTTPException(
@@ -86,6 +103,14 @@ async def refresh_token(
     credentials: HTTPAuthorizationCredentials = Depends(get_refresh_token),
     db: AsyncSession = Depends(get_database),
 ):
+    """
+    Refresh JWT
+
+    :param credentials: HTTPAuthorizationCredentials
+    :param db: AsyncSession
+    :return: TokenSchema
+    """
+
     token = credentials.credentials
     email = await auth_service.decode_refresh_token(token)
     user = await repositories_users.get_user_by_email(email, db)
@@ -107,6 +132,14 @@ async def refresh_token(
 
 @router.get("/confirmed_email/{token}")
 async def confirmed_email(token: str, db: AsyncSession = Depends(get_database)):
+    """
+    Confirm email address
+
+    :param token: str
+    :param db: AsyncSession
+    :return: {"message": "Email confirmed"}
+    """
+
     email = await auth_service.get_email_from_token(token)
     user = await repositories_users.get_user_by_email(email, db)
     if user is None:
@@ -126,6 +159,15 @@ async def request_email(
     request: Request,
     db: AsyncSession = Depends(get_database),
 ):
+    """
+    Send email for confirmation
+
+    :param body: RequestEmailSchema
+    :param background_tasks: BackgroundTasks
+    :param request: Request
+    :param db: AsyncSession
+    :return: {"message": "Check your email for confirmation"}
+    """
     user = await repositories_users.get_user_by_email(body.email, db)
 
     if user.confirmed:

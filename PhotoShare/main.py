@@ -36,11 +36,32 @@ app.include_router(comments.router, prefix="/api")
 
 @app.get("/")
 def index():
+    """
+    Root endpoint to check if the app is up and running.
+
+    Returns:
+        dict: A dictionary with a message indicating that the app running.
+
+    """
+
     return {"message": "Hello world"}
 
 
 @app.get("/api/healthchecker")
 async def healthchecker(db: AsyncSession = Depends(get_database)):
+    """
+    Healthchecker to check if the app is up and running database connection.
+
+    Args:
+        db (AsyncSession): Database session
+
+    Raises:
+        HTTPException: If there is an error connecting to the database.
+
+    Returns:
+        dict: A dictionary with a message indicating that the app is up and running.
+
+    """
     try:
         # Make request
         result = await db.execute(text("SELECT 1"))
@@ -55,5 +76,5 @@ async def healthchecker(db: AsyncSession = Depends(get_database)):
         raise HTTPException(status_code=500, detail="Error connecting to the database")
 
 
-# if __name__ == "__main__":
-#     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
