@@ -1,7 +1,5 @@
 # PhotoShare/services/qrcode_service.py
 
-import requests
-
 import qrcode
 import cloudinary
 import cloudinary.uploader
