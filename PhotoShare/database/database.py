@@ -1,7 +1,5 @@
 import contextlib
-
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
-
 from ..conf.config import settings
 
 

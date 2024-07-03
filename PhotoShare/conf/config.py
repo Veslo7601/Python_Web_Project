@@ -1,10 +1,11 @@
 from pydantic_settings import BaseSettings
 from pydantic import ConfigDict
+import os
 
 
 class Settings(BaseSettings):
-    SQLALCHEMY_DATABASE_URL: str = "postgresql+asyncpg://postgres:password@localhost:5432/postgres"
-    
+    # SQLALCHEMY_DATABASE_URL: str = "postgresql+asyncpg://postgres:password@localhost:5432/postgres"
+    SQLALCHEMY_DATABASE_URL: str = os.getenv("DATABASE_URL")
     secret_key: str = "secret"
     algorithm: str = "HS256"
 
