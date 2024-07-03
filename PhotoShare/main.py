@@ -11,12 +11,7 @@ from PhotoShare.database.database import get_database
 from PhotoShare.routers import auth, users, images, tags, comments
 from PhotoShare.conf.config import settings
 
-app = FastAPI(
-    docs_url="/docs",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json"
-)
-
+app = FastAPI()
 origins = ["*"]
 
 app.add_middleware(
