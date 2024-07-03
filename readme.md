@@ -3,30 +3,10 @@
 To run the project, you need an ```.env``` file with environment variables. Create it with the following content and replace 
 with your own values.
 
-```dotenv
 
-# Database PostgreSQL
-SQLALCHEMY_DATABASE_URL=postgresql://username:password@localhost:5433/postgres
-POSTGRES_DB=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_PORT=
-
-# JWT authentication
-SECRET_KEY=
-ALGORITHM=
-
-# Email service
-MAIL_USERNAME=
-MAIL_PASSWORD=
-MAIL_FROM=
-MAIL_PORT=
-MAIL_SERVER=
-
-# Redis
-REDIS_HOST=
-REDIS_PORT=
-REDIS_PASSWORD=
+ Create and configure your `.env` file:
+```bash
+cp .env.example .env
 ```
 
 ## Installation
@@ -55,12 +35,9 @@ pip install -r requirements.txt
 4. Set up the database:
 
 ```bash
-docker compose up
-alembic upgrade head
+docker compose up --build
 ```
 
 5. Run the application:
 
-```bash
-uvicorn PhotoShare.main:app
-```
+The launch of the application will occur in the container
