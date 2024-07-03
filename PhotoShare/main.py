@@ -11,11 +11,7 @@ from PhotoShare.database.database import get_database
 from PhotoShare.routers import auth, users, images, tags, comments
 from PhotoShare.conf.config import settings
 
-app = FastAPI(
-    docs_url="/project_group_9/docs",  # Вказуємо правильний шлях для Swagger документації
-    redoc_url="/project_group_9/redoc",  # Вказуємо правильний шлях для ReDoc документації
-    openapi_url="/project_group_9/openapi.json"  # Вказуємо правильний шлях для OpenAPI спецификації
-)
+app = FastAPI()
 origins = ["*"]
 
 app.add_middleware(
