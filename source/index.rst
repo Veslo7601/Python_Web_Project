@@ -18,6 +18,13 @@ REST API main
   :undoc-members:
   :show-inheritance:
 
+REST API repository Comments
+==========================
+.. automodule:: PhotoShare.repository.comments
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
 
 REST API repository Images
 ==========================
@@ -70,6 +77,14 @@ REST API routers Users
 REST API routers Auth
 =========================
 .. automodule:: PhotoShare.routers.auth
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
+
+REST API routers Comments
+=========================
+.. automodule:: PhotoShare.routers.comments
   :members:
   :undoc-members:
   :show-inheritance:

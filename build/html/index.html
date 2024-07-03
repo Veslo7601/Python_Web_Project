@@ -65,6 +65,88 @@
 </dd></dl>
 
 </section>
+<section id="rest-api-repository-comments">
+<h1>REST API repository Comments<a class="headerlink" href="#rest-api-repository-comments" title="Link to this heading">¶</a></h1>
+<dl class="py function" id="module-PhotoShare.repository.comments">
+<dt class="sig sig-object py" id="PhotoShare.repository.comments.add_comment_to_image">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.repository.comments.</span></span><span class="sig-name descname"><span class="pre">add_comment_to_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.repository.comments.add_comment_to_image" title="Link to this definition">¶</a></dt>
+<dd><p>Add comment to image in database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> – Images</p></li>
+<li><p><strong>description</strong> – str</p></li>
+<li><p><strong>db</strong> – AsyncSession</p></li>
+<li><p><strong>user_id</strong> – int</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CommentsSchema</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="PhotoShare.repository.comments.delete_comment">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.repository.comments.</span></span><span class="sig-name descname"><span class="pre">delete_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.repository.comments.delete_comment" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="PhotoShare.repository.comments.get_all_comments">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.repository.comments.</span></span><span class="sig-name descname"><span class="pre">get_all_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.repository.comments.get_all_comments" title="Link to this definition">¶</a></dt>
+<dd><p>Get all comments by image id from database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_id</strong> – int</p></li>
+<li><p><strong>limit</strong> – int</p></li>
+<li><p><strong>offset</strong> – int</p></li>
+<li><p><strong>db</strong> – AsyncSession</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[CommentsSchema]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="PhotoShare.repository.comments.get_image_by_id_for_comments">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.repository.comments.</span></span><span class="sig-name descname"><span class="pre">get_image_by_id_for_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.repository.comments.get_image_by_id_for_comments" title="Link to this definition">¶</a></dt>
+<dd><p>Get image by id from database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_id</strong> – int</p></li>
+<li><p><strong>db</strong> – AsyncSession</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ImageSchema</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="PhotoShare.repository.comments.update_comment">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.repository.comments.</span></span><span class="sig-name descname"><span class="pre">update_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.repository.comments.update_comment" title="Link to this definition">¶</a></dt>
+<dd><p>Update comment in database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>comment_id</strong> – int</p></li>
+<li><p><strong>description</strong> – str</p></li>
+<li><p><strong>db</strong> – AsyncSession</p></li>
+<li><p><strong>user_id</strong> – int</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CommentsSchema</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-PhotoShare.repository.images">
 <span id="rest-api-repository-images"></span><h1>REST API repository Images<a class="headerlink" href="#module-PhotoShare.repository.images" title="Link to this heading">¶</a></h1>
 <dl class="py function">
@@ -821,6 +903,83 @@
 </dd></dl>
 
 </section>
+<section id="module-PhotoShare.routers.comments">
+<span id="rest-api-routers-comments"></span><h1>REST API routers Comments<a class="headerlink" href="#module-PhotoShare.routers.comments" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="PhotoShare.routers.comments.add_comment_to_image">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.routers.comments.</span></span><span class="sig-name descname"><span class="pre">add_comment_to_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_database)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.routers.comments.add_comment_to_image" title="Link to this definition">¶</a></dt>
+<dd><p>Add comment to image in database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_id</strong> – int</p></li>
+<li><p><strong>description</strong> – str</p></li>
+<li><p><strong>db</strong> – AsyncSession</p></li>
+<li><p><strong>user</strong> – User</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CommentsSchema</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="PhotoShare.routers.comments.delete_comment">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.routers.comments.</span></span><span class="sig-name descname"><span class="pre">delete_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Depends(get_database)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.routers.comments.delete_comment" title="Link to this definition">¶</a></dt>
+<dd><p>Delete comment from database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>comment_id</strong> – int</p></li>
+<li><p><strong>db</strong> – AsyncSession</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CommentsSchema</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="PhotoShare.routers.comments.get_all_comments">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.routers.comments.</span></span><span class="sig-name descname"><span class="pre">get_all_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Query(10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Query(0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_database)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.routers.comments.get_all_comments" title="Link to this definition">¶</a></dt>
+<dd><p>Get all comments by image id from database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_id</strong> – int</p></li>
+<li><p><strong>limit</strong> – int</p></li>
+<li><p><strong>offset</strong> – int</p></li>
+<li><p><strong>db</strong> – AsyncSession</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[CommentsSchema]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="PhotoShare.routers.comments.update_comment">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PhotoShare.routers.comments.</span></span><span class="sig-name descname"><span class="pre">update_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncSession</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_database)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PhotoShare.routers.comments.update_comment" title="Link to this definition">¶</a></dt>
+<dd><p>Update comment in database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>comment_id</strong> – int</p></li>
+<li><p><strong>description</strong> – str</p></li>
+<li><p><strong>db</strong> – AsyncSession</p></li>
+<li><p><strong>user</strong> – User</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CommentsSchema</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-PhotoShare.services.auth">
 <span id="rest-api-service-auth"></span><h1>REST API service Auth<a class="headerlink" href="#module-PhotoShare.services.auth" title="Link to this heading">¶</a></h1>
 <dl class="py class">
@@ -944,6 +1103,14 @@
 <li><a class="reference internal" href="#PhotoShare.main.index"><code class="docutils literal notranslate"><span class="pre">index()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#rest-api-repository-comments">REST API repository Comments</a><ul>
+<li><a class="reference internal" href="#PhotoShare.repository.comments.add_comment_to_image"><code class="docutils literal notranslate"><span class="pre">add_comment_to_image()</span></code></a></li>
+<li><a class="reference internal" href="#PhotoShare.repository.comments.delete_comment"><code class="docutils literal notranslate"><span class="pre">delete_comment()</span></code></a></li>
+<li><a class="reference internal" href="#PhotoShare.repository.comments.get_all_comments"><code class="docutils literal notranslate"><span class="pre">get_all_comments()</span></code></a></li>
+<li><a class="reference internal" href="#PhotoShare.repository.comments.get_image_by_id_for_comments"><code class="docutils literal notranslate"><span class="pre">get_image_by_id_for_comments()</span></code></a></li>
+<li><a class="reference internal" href="#PhotoShare.repository.comments.update_comment"><code class="docutils literal notranslate"><span class="pre">update_comment()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-PhotoShare.repository.images">REST API repository Images</a><ul>
 <li><a class="reference internal" href="#PhotoShare.repository.images.add_image"><code class="docutils literal notranslate"><span class="pre">add_image()</span></code></a></li>
 <li><a class="reference internal" href="#PhotoShare.repository.images.delete_image"><code class="docutils literal notranslate"><span class="pre">delete_image()</span></code></a></li>
@@ -1004,6 +1171,13 @@
 <li><a class="reference internal" href="#PhotoShare.routers.auth.refresh_token"><code class="docutils literal notranslate"><span class="pre">refresh_token()</span></code></a></li>
 <li><a class="reference internal" href="#PhotoShare.routers.auth.request_email"><code class="docutils literal notranslate"><span class="pre">request_email()</span></code></a></li>
 <li><a class="reference internal" href="#PhotoShare.routers.auth.signup"><code class="docutils literal notranslate"><span class="pre">signup()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-PhotoShare.routers.comments">REST API routers Comments</a><ul>
+<li><a class="reference internal" href="#PhotoShare.routers.comments.add_comment_to_image"><code class="docutils literal notranslate"><span class="pre">add_comment_to_image()</span></code></a></li>
+<li><a class="reference internal" href="#PhotoShare.routers.comments.delete_comment"><code class="docutils literal notranslate"><span class="pre">delete_comment()</span></code></a></li>
+<li><a class="reference internal" href="#PhotoShare.routers.comments.get_all_comments"><code class="docutils literal notranslate"><span class="pre">get_all_comments()</span></code></a></li>
+<li><a class="reference internal" href="#PhotoShare.routers.comments.update_comment"><code class="docutils literal notranslate"><span class="pre">update_comment()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-PhotoShare.services.auth">REST API service Auth</a><ul>

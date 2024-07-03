@@ -1,7 +1,7 @@
-# Реалізація проекту
+# PhotoShare a web service
 
-Для роботи проекта необхідний файл `.env` зі змінними оточення.
-Створіть його з таким вмістом і підставте свої значення.
+To run the project, you need an ```.env``` file with environment variables. Create it with the following content and replace 
+with your own values.
 
 ```dotenv
 
@@ -29,22 +29,37 @@ REDIS_PORT=
 REDIS_PASSWORD=
 ```
 
-Запуск баз даних
+## Installation
 
+1. Clone the repository:
 
 ```bash
-docker-compose up --build
+git clone https://github.com/Veslo7601/Python_Web_Project.git
 ```
 
-Міграця баз даних
-
+2. Create a virtual environment (recommended) and activate it:
 
 ```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+3. Install dependencies using requirements.txt:
+
+```bash
+pip install -r requirements.txt
+```
+
+### **Add ```.env``` file**
+
+4. Set up the database:
+
+```bash
+docker compose up
 alembic upgrade head
 ```
 
-Запуск застосунку
-
+5. Run the application:
 
 ```bash
 uvicorn PhotoShare.main:app
