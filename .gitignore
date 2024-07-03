@@ -4,3 +4,4 @@
 .env
 .idea
 postgres-data
+__pycache__/
