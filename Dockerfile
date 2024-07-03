@@ -1,15 +1,26 @@
-# Використовуємо офіційний образ Python версії 3.11
+# Используем официальный Python образ в качестве базового
 FROM python:3.10.2-slim
 
-# Встановлюємо змінні середовища
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+RUN apt-get update && apt-get install -y git
 
-# Копіюємо файли залежностей у контейнер
-COPY requirements.txt .
+# Устанавливаем рабочую директорию в контейнере
+WORKDIR /app
 
-# Встановлюємо залежності за допомогою pip
-RUN pip install --no-cache-dir -r requirements.txt
+# Копируем файлы проекта в контейнер
+COPY ./PhotoShare ./PhotoShare
+COPY ./migration ./migration
+COPY requirements.txt ./
+COPY .env ./
+COPY alembic.ini ./
+COPY run_uvicorn.sh ./
 
-# Копіюємо весь вміст поточної директорії у контейнер у /app
-COPY . .
+# Устанавливаем зависимости
+RUN pip install -r requirements.txt
+
+# Делаем скрипт исполняемым
+RUN chmod +x run_uvicorn.sh
+
+# Указываем команду для запуска приложения
+CMD ["./run_uvicorn.sh"]
+
+
