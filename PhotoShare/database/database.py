@@ -1,7 +1,5 @@
 import contextlib
-
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
-
 from ..conf.config import settings
 
 
@@ -18,7 +16,7 @@ class DatabaseSessionManager:
         session = self._session_maker()
         try:
             yield session
-        except Exception as err:
+        except AttributeError as err:
             print(err)
             await session.rollback()
         finally:
