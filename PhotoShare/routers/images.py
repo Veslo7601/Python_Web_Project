@@ -34,6 +34,18 @@ async def post_image(
         db: AsyncSession = Depends(get_database),
         user: User = Depends(auth_service.get_current_user)
 ):
+    """
+    Create new image
+
+    :param title: str
+    :param description: str
+    :param file: UploadFile
+    :param tags: List[str]
+    :param db: AsyncSession
+    :param user: User
+    :return: ImageSchema
+    """
+
     public_id = f"users/{user.email}"
     res = cloudinary.uploader.upload(file.file, public_id=public_id, owerite=True)
     res_url = cloudinary.CloudinaryImage(public_id).build_url(
@@ -53,6 +65,16 @@ async def get_images(
         limit: int = Query(10, ge=10, le=500), offset: int = Query(0, ge=0),
         db: AsyncSession = Depends(get_database), user: User = Depends(auth_service.get_current_user)
 ):
+    """
+    Get all images from database
+
+    :param limit: int
+    :param offset: int
+    :param db: AsyncSession
+    :param user: User
+    :return: List[ImageSchema]
+    """
+
     images = await get_all_images(limit, offset, db, user.id)
     if images is None:
         return []
@@ -66,6 +88,15 @@ async def get_image(
         image_path: str,
         db: AsyncSession = Depends(get_database), user: User = Depends(auth_service.get_current_user)
 ):
+    """
+    Get image by url from database
+
+    :param image_path: str
+    :param db: AsyncSession
+    :param user: User
+    :return: ImageSchema
+    """
+
     image = await get_image_by_url(image_path, db, user.id)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
@@ -80,6 +111,16 @@ async def edit_image_description(
         image_id: int = Path(ge=1),
         db: AsyncSession = Depends(get_database), user: User = Depends(auth_service.get_current_user)
 ):
+    """
+    Edit image description
+
+    :param description: str
+    :param image_id: int
+    :param db: AsyncSession
+    :param user: User
+    :return: ImageSchema
+    """
+
     image = await update_image_description(image_id, description, db, user.id)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
@@ -96,6 +137,15 @@ async def remove_image(
         user: User = Depends(auth_service.get_current_user)
 
 ):
+    """
+    Remove image from database
+
+    :param image_id: int
+    :param db: AsyncSession
+    :param user: User
+    :return: None
+    """
+
     image = await delete_image(image_id, db, user)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Image not found")
@@ -109,6 +159,15 @@ async def generate_qr_for_image(
         image_id: int = Path(ge=1),
         db: AsyncSession = Depends(get_database), user: User = Depends(auth_service.get_current_user)
 ):
+    """
+    Generate QR code for image
+
+    :param image_id: int
+    :param db: AsyncSession
+    :param user: User
+    :return: QRcodeResponseSchema
+    """
+
     try:
         qr_code_url = await update_image_qr_code(image_id, db, user.id)
 
@@ -136,6 +195,19 @@ async def transform_image(
         user: User = Depends(auth_service.get_current_user)
 
 ):
+    """
+    Transform image
+
+    :param image_id: int
+    :param width: int
+    :param height: int
+    :param crop: str
+    :param filter: str
+    :param db: AsyncSession
+    :param user: User
+    :return: ImageSchema
+    """
+
     image = await get_image_by_id(image_id, db, user.id)
     if image is None:
         raise HTTPException(status_code=404, detail="Image not found")

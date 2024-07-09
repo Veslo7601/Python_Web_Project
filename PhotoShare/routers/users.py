@@ -33,6 +33,13 @@ access_to_route_all = RoleAccess([Role.admin])
     response_model=UserResponseSchema
 )
 async def get_user(user: User = Depends(auth_service.get_current_user)):
+    """
+    Get user info
+
+    :param user: User
+    :return: UserResponseSchema
+    """
+
     return user
 
 
@@ -41,6 +48,14 @@ async def get_user(user: User = Depends(auth_service.get_current_user)):
     response_model=UserResponseSchema
 )
 async def update_user_info(body: UserUpdateSchema, user: User = Depends(auth_service.get_current_user), db: AsyncSession = Depends(get_database)):
+    """
+    Update user info in database
+
+    :param body: UserUpdateSchema
+    :param user: User
+    :param db: AsyncSession
+    :return: UserResponseSchema
+    """
     user = await repositories_user.update_user(body, db, user)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
@@ -57,6 +72,15 @@ async def get_avatar(
     user: User = Depends(auth_service.get_current_user),
     db: AsyncSession = Depends(get_database),
 ):
+    """
+    Get avatar from cloudinary and save it in database
+
+    :param file: UploadFile
+    :param user: User
+    :param db: AsyncSession
+    :return: UserResponseSchema
+    """
+
     public_id = f"Web21/{user.email}"
     res = cloudinary.uploader.upload(file.file, public_id=public_id, owerite=True)
     res_url = cloudinary.CloudinaryImage(public_id).build_url(
@@ -72,12 +96,26 @@ async def get_avatar(
     dependencies=[Depends(access_to_route_all)],
 )
 async def get_user_info(username: str = Path(), db: AsyncSession = Depends(get_database)):
+    """
+    Get user info by username from database
+
+    :param username: str
+    :param db: AsyncSession
+    :return: UserResponseSchema
+    """
     user_info = await repositories_user.get_user_by_username(username, db)
     return user_info
 
-@router.delete("/block/{username}",
-           dependencies=[Depends(access_to_route_all)])
+
+@router.delete("/block/{username}", dependencies=[Depends(access_to_route_all)])
 async def block_current_user(username: str, db: AsyncSession = Depends(get_database)):
+    """
+    Block user by username in database
+
+    :param username: str
+    :param db: AsyncSession
+    :return: {"message": "User successfully blocked"}
+    """
     user = await repositories_user.get_user_by_username(username, db)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")

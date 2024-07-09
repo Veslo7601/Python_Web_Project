@@ -1,51 +1,43 @@
-# Реалізація проекту
+# PhotoShare a web service
 
-Для роботи проекта необхідний файл `.env` зі змінними оточення.
-Створіть його з таким вмістом і підставте свої значення.
+To run the project, you need an ```.env``` file with environment variables. Create it with the following content and replace 
+with your own values.
 
-```dotenv
 
-# Database PostgreSQL
-SQLALCHEMY_DATABASE_URL=postgresql://username:password@localhost:5433/postgres
-POSTGRES_DB=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_PORT=
-
-# JWT authentication
-SECRET_KEY=
-ALGORITHM=
-
-# Email service
-MAIL_USERNAME=
-MAIL_PASSWORD=
-MAIL_FROM=
-MAIL_PORT=
-MAIL_SERVER=
-
-# Redis
-REDIS_HOST=
-REDIS_PORT=
-REDIS_PASSWORD=
+ Create and configure your `.env` file:
+```bash
+cp .env.example .env
 ```
 
-Запуск баз даних
+## Installation
 
+1. Clone the repository:
 
 ```bash
-docker-compose up --build
+git clone https://github.com/Veslo7601/Python_Web_Project.git
 ```
 
-Міграця баз даних
-
+2. Create a virtual environment (recommended) and activate it:
 
 ```bash
-alembic upgrade head
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-Запуск застосунку
-
+3. Install dependencies using requirements.txt:
 
 ```bash
-uvicorn PhotoShare.main:app
+pip install -r requirements.txt
 ```
+
+### **Add ```.env``` file**
+
+4. Set up the database:
+
+```bash
+docker compose up --build
+```
+
+5. Run the application:
+
+The launch of the application will occur in the container

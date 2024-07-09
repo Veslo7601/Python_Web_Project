@@ -12,6 +12,15 @@ from PhotoShare.services.qrcode import generate_qr_code
 
 
 async def add_image(body: ImageSchema, tags: Optional[List[str]], db: AsyncSession, user: User):
+    """
+    Add new image to database and return it with tags if provided else None
+
+    :param body: ImageSchema
+    :param tags: List[str]
+    :param db: AsyncSession
+    :param user: User
+    :return: ImageSchema
+    """
     try:
         image = Images(**body.dict(), owner_id=user.id)
 
@@ -50,6 +59,16 @@ async def add_image(body: ImageSchema, tags: Optional[List[str]], db: AsyncSessi
 
 
 async def get_all_images(limit: int, offset: int, db: AsyncSession, user_id: int):
+    """
+    Get all images from database
+
+    :param limit: int
+    :param offset: int
+    :param db: AsyncSession
+    :param user_id: int
+    :return: List[ImageSchema]
+    """
+
     stmt = select(Images).options(joinedload(Images.tags)).filter_by(owner_id=user_id).offset(offset).limit(limit)
     result = await db.execute(stmt)
     images = result.unique().scalars()
@@ -70,6 +89,15 @@ async def get_all_images(limit: int, offset: int, db: AsyncSession, user_id: int
 
 
 async def get_image_by_url(image_url: str, db: AsyncSession, user_id: int):
+    """
+    Get image by url from database
+
+    :param image_url: str
+    :param db: AsyncSession
+    :param user_id: int
+    :return: ImageSchema
+    """
+
     stmt = select(Images).options(joinedload(Images.tags)).filter_by(images_url=image_url, owner_id=user_id)
     result = await db.execute(stmt)
     image = result.unique().scalar_one_or_none()
@@ -89,12 +117,31 @@ async def get_image_by_url(image_url: str, db: AsyncSession, user_id: int):
 
 
 async def get_image_by_id(image_id: int, db: AsyncSession, user_id: int):
+    """
+    Get image by id from database
+
+    :param image_id: int
+    :param db: AsyncSession
+    :param user_id: int
+    :return: ImageSchema
+    """
+
     stmt = select(Images).filter_by(id=image_id, owner_id=user_id)
     image = await db.execute(stmt)
     return image.unique().scalar_one_or_none()
 
 
 async def update_image_description(image_id: int, description: str, db: AsyncSession, user_id: int):
+    """
+    Update image description in database
+
+    :param image_id: int
+    :param description: str
+    :param db: AsyncSession
+    :param user_id: int
+    :return: ImageSchema
+    """
+
     stmt = select(Images).options(joinedload(Images.tags)).filter_by(id=image_id, owner_id=user_id)
     result = await db.execute(stmt)
     image = result.unique().scalar_one_or_none()
@@ -117,6 +164,15 @@ async def update_image_description(image_id: int, description: str, db: AsyncSes
 
 
 async def delete_image(image_id: int, db: AsyncSession, user: User):
+    """
+    Delete image from database
+
+    :param image_id: int
+    :param db: AsyncSession
+    :param user: User
+    :return: ImageSchema
+    """
+
     stmt = select(Images).options(joinedload(Images.tags)).filter_by(id=image_id, owner_id=user.id)
     image = await db.execute(stmt)
     image = image.unique().scalar_one_or_none()
@@ -128,6 +184,15 @@ async def delete_image(image_id: int, db: AsyncSession, user: User):
 
 
 async def update_image_qr_code(image_id: int, db: AsyncSession, user_id: int):
+    """
+    Update image qr code in database
+
+    :param image_id: int
+    :param db: AsyncSession
+    :param user_id: int
+    :return: str
+    """
+
     result = await db.execute(select(Images).filter_by(id=image_id, owner_id=user_id))
     image = result.unique().scalar_one_or_none()
     if image is None:
@@ -141,6 +206,16 @@ async def update_image_qr_code(image_id: int, db: AsyncSession, user_id: int):
 
 
 async def update_image_url(image_id: int, db: AsyncSession, user: User, transformed_url: str):
+    """
+    Update image url in database
+
+    :param image_id: int
+    :param db: AsyncSession
+    :param user: User
+    :param transformed_url: str
+    :return: ImageSchema
+    """
+
     result = await db.execute(select(Images).filter_by(id=image_id, owner_id=user.id))
     image = result.unique().scalar_one_or_none()
     image.images_url = transformed_url
